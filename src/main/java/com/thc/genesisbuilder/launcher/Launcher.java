@@ -17,6 +17,6 @@ public class Launcher {
         int selectedDifficulty = difInput.nextInt();
         System.out.println("Enter pszTimeStamp:\n");
         String pszTimeStamp = alInput.nextLine();
-        gb.buildGenesisBlock(0, System.currentTimeMillis(), pszTimeStamp, "", "", SHA256.generateSHA256Hash(0 + pszTimeStamp + ""), 0L, null, selectedAlgo, selectedDifficulty, 50);
+        gb.buildGenesisBlock(0, System.currentTimeMillis(), pszTimeStamp, "", "", SHA256.generateSHA256Hash(0L + pszTimeStamp + ""), 0L, "none", selectedAlgo, selectedDifficulty, 50);
     }
 }

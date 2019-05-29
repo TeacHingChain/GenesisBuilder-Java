@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 class GenesisBuilder {
     private static long hashRate;
 
-    void buildGenesisBlock(long index, long currentTimeMillis, String pszTimeStamp, String recvKey, String minerKey, String txHash, long Nonce, String previousBlockHash, String algo, int difficulty, float amount) throws InterruptedException {
+    void buildGenesisBlock(long index, long currentTimeMillis, String pszTimeStamp, String fromAddress, String toAddress, String txHash, long Nonce, String previousBlockHash, String algo, int difficulty, float amount) throws InterruptedException {
         if (algo.contentEquals("sha256")) { // will be able to select algorithm for genesis eventually
             boolean iterator = true;
             long startTime = System.nanoTime();
@@ -24,7 +24,7 @@ class GenesisBuilder {
             }, 0, 3000);
 
             while (iterator) {
-                String blockHeader = (index + currentTimeMillis + pszTimeStamp + recvKey + minerKey + txHash + Nonce + previousBlockHash + algo + difficulty + amount);
+                String blockHeader = (index + currentTimeMillis + pszTimeStamp + fromAddress + toAddress + txHash + Nonce + previousBlockHash + algo + difficulty + amount);
                 String hash = SHA256.generateSHA256Hash(blockHeader);
                 long deltaS;
                 long deltaN;
@@ -57,7 +57,7 @@ class GenesisBuilder {
                         System.out.println("\n");
                         System.out.println("Difficulty: \n" + difficulty);
                         System.out.println("\n");
-                        boolean isGenesisValid = validateGenesisHash(index, currentTimeMillis, pszTimeStamp, recvKey, minerKey, txHash, Nonce, previousBlockHash, algo, difficulty, amount, hash);
+                        boolean isGenesisValid = validateGenesisHash(index, currentTimeMillis, pszTimeStamp, fromAddress, toAddress, txHash, Nonce, previousBlockHash, algo, difficulty, amount, hash);
                         if (isGenesisValid) {
                             timer.cancel();
                             iterator = false;
@@ -96,7 +96,7 @@ class GenesisBuilder {
                         System.out.println("\n");
                         System.out.println("Difficulty: \n" + difficulty);
                         System.out.println("\n");
-                        boolean isGenesisValid = validateGenesisHash(index, currentTimeMillis, pszTimeStamp, recvKey, minerKey, txHash, Nonce, previousBlockHash, algo, difficulty, amount, hash);
+                        boolean isGenesisValid = validateGenesisHash(index, currentTimeMillis, pszTimeStamp, fromAddress, toAddress, txHash, Nonce, previousBlockHash, algo, difficulty, amount, hash);
                         if (isGenesisValid) {
                             timer.cancel();
                             iterator = false;
@@ -135,7 +135,7 @@ class GenesisBuilder {
                         System.out.println("\n");
                         System.out.println("Difficulty: \n" + difficulty);
                         System.out.println("\n");
-                        boolean isGenesisValid = validateGenesisHash(index, currentTimeMillis, pszTimeStamp, recvKey, minerKey, txHash, Nonce, previousBlockHash, algo, difficulty, amount, hash);
+                        boolean isGenesisValid = validateGenesisHash(index, currentTimeMillis, pszTimeStamp, fromAddress, toAddress, txHash, Nonce, previousBlockHash, algo, difficulty, amount, hash);
                         if (isGenesisValid) {
                             timer.cancel();
                             iterator = false;
@@ -174,7 +174,7 @@ class GenesisBuilder {
                         System.out.println("\n");
                         System.out.println("Difficulty: \n" + difficulty);
                         System.out.println("\n");
-                        boolean isGenesisValid = validateGenesisHash(index, currentTimeMillis, pszTimeStamp, recvKey, minerKey, txHash, Nonce, previousBlockHash, algo, difficulty, amount, hash);
+                        boolean isGenesisValid = validateGenesisHash(index, currentTimeMillis, pszTimeStamp, fromAddress, toAddress, txHash, Nonce, previousBlockHash, algo, difficulty, amount, hash);
                         if (isGenesisValid) {
                             timer.cancel();
                             iterator = false;
@@ -206,13 +206,17 @@ class GenesisBuilder {
                         System.out.println("\n");
                         System.out.println("Data: \n" + pszTimeStamp);
                         System.out.println("\n");
+                        System.out.println("Tx hash: " + txHash);
+                        System.out.println("\n");
+                        System.out.println("Merkle hash: " + SHA256.generateSHA256Hash(txHash));
+                        System.out.println("\n");
                         System.out.println("Previous " + previousBlockHash);
                         System.out.println("\n");
                         System.out.println("Nonce: \n" + Nonce);
                         System.out.println("\n");
                         System.out.println("Difficulty: \n" + difficulty);
                         System.out.println("\n");
-                        boolean isGenesisValid = validateGenesisHash(index, currentTimeMillis, pszTimeStamp, recvKey, minerKey, txHash, Nonce, previousBlockHash, algo, difficulty, amount, hash);
+                        boolean isGenesisValid = validateGenesisHash(index, currentTimeMillis, pszTimeStamp, fromAddress, toAddress, txHash, Nonce, previousBlockHash, algo, difficulty, amount, hash);
                         if (isGenesisValid) {
                             timer.cancel();
                             iterator = false;
@@ -228,7 +232,6 @@ class GenesisBuilder {
     }
 
     private boolean validateGenesisHash(long index, long currentTimeMillis, String pszTimeStamp, String recvKey, String minerKey, String txHash, long Nonce, String previousBlockHash, String algo, int difficulty, float amount, String genesisHash) {
-        txHash = SHA256.generateSHA256Hash(index + pszTimeStamp + recvKey);
         String checkHash = SHA256.generateSHA256Hash(index + currentTimeMillis + pszTimeStamp + recvKey + minerKey + txHash + Nonce + previousBlockHash + algo + difficulty + amount);
         if (!checkHash.contentEquals(genesisHash)) {
             System.out.println("\n");
